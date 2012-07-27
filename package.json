@@ -1,0 +1,9 @@
+{
+	"name" : "squeezer",
+	"version" : "0.0.1",
+	"devDependencies": {
+		"chai":"latest",
+		"mocha":"latest"
+	},
+	"main" : "./lib/squeezer.js"
+}
