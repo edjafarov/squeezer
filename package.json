@@ -5,5 +5,8 @@
 		"chai":"latest",
 		"mocha":"latest"
 	},
-	"main" : "./lib/squeezer.js"
+	"main" : "./lib/squeezer.js",
+	"scripts" : {
+		"test":"./node_modules/.bin/mocha --reporter spec"
+	}
 }
