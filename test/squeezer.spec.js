@@ -1,25 +1,70 @@
 var squeezer = require("../lib/squeezer.js")();
 var expect = require("chai").expect;
-describe("squeezer will squeeze your array of objects",function(){
+
+
+describe("squeezer will allow you to",function(){
 	var mock = [
-		{id:1, msg:"id1"},{id:2, msg:"id2"},{id:3, msg:"id3"}
+		{id:1, msg:"id1"},
+    {id:2, msg:"id2"},
+    {id:3, msg:"id3"},
+    {id:4, arr: [
+        {
+          id:5,
+          msg:"nested object"
+        },
+        {
+          id:6,
+          msg:"another nested"
+        },
+        {
+          id:7,
+          msg:"deeper nested",
+          deep: [
+            {
+              id:8,
+              msg:"deepest object"
+            }
+          ]
+        }
+      ]}
 	];
-	it("like if you want to refer one of properties as a key", function(done){
-		var sM = squeezer(mock);
+	it("refer nested object elements by value of their fields", function(done){
+		var sM = squeezer(mock, "id:1");
 		expect(sM).to.be.ok;
 		expect(sM).to.be.an('object');
-		
-		expect(sM).to.have.deep.property('1.msg', 'id1');
-		expect(sM).to.have.deep.property('2.msg', 'id2');
-		expect(sM).to.have.deep.property('3.msg', 'id3');
+		expect(sM).to.have.property('msg', 'id1');
 		done();
 	});
 
-	it("if you want to refer an id manually", function(done){
-		var sM = squeezer(mock, "msg");
-		expect(sM).to.have.deep.property('id1.id', 1);
-		expect(sM).to.have.deep.property('id2.id', 2);
-		expect(sM).to.have.deep.property('id3.id', 3);
+	it("not even id", function(done){
+		var sM = squeezer(mock, "msg:id1");
+		expect(sM).to.be.an('object');
+    expect(sM).to.have.property('id', 1);
 		done();
 	});
+  it("even deeply nested elements", function(done){
+    var sM = squeezer(mock, "id:4.arr.id:6");
+    expect(sM).to.be.an('object');
+    expect(sM).to.have.property('msg', 'another nested');
+    done();
+  });
+  it("and even deeper nested elements", function(done){
+    var sM = squeezer(mock, "id:4.arr.id:7.deep.id:8");
+    expect(sM).to.be.an('object');
+    expect(sM).to.have.property('msg', 'deepest object');
+    done();
+  });
+  it("will throw an error if path is wrong", function(done){
+    expect(function(){squeezer(mock,"id:200")}).to.throw(/can't find property/);
+    done();
+  });
+  it("will throw an error if node is not an object", function(done){
+    expect(function(){squeezer(mock,"id:4.arr.id.5")}).to.throw(/not an object/);
+    done();
+  });
+ /* it("will throw an error if node is not an array", function(done){
+    expect(function(){squeezer(mock,"id:4.arr:id5")}).to.throw(/not an array/);
+    done();
+  
+  })*/
 })

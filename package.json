@@ -1,7 +1,10 @@
 {
 	"name" : "squeezer",
-	"version" : "0.0.1",
-	"devDependencies": {
+	"version" : "0.0.2",
+	"dependencies": {
+    "underscore":"latest"
+  },
+  "devDependencies": {
 		"chai":"latest",
 		"mocha":"latest"
 	},
