@@ -29,7 +29,7 @@ describe("squeezer will allow you to",function(){
       ]}
 	];
 	it("refer nested object elements by value of their fields", function(done){
-		var sM = squeezer(mock, "id:1");
+		var sM = squeezer.get(mock, "id:1");
 		expect(sM).to.be.ok;
 		expect(sM).to.be.an('object');
 		expect(sM).to.have.property('msg', 'id1');
@@ -37,31 +37,41 @@ describe("squeezer will allow you to",function(){
 	});
 
 	it("not even id", function(done){
-		var sM = squeezer(mock, "msg:id1");
+		var sM = squeezer.get(mock, "msg:id1");
 		expect(sM).to.be.an('object');
     expect(sM).to.have.property('id', 1);
 		done();
 	});
   it("even deeply nested elements", function(done){
-    var sM = squeezer(mock, "id:4.arr.id:6");
+    var sM = squeezer.get(mock, "id:4.arr.id:6");
     expect(sM).to.be.an('object');
     expect(sM).to.have.property('msg', 'another nested');
     done();
   });
   it("and even deeper nested elements", function(done){
-    var sM = squeezer(mock, "id:4.arr.id:7.deep.id:8");
+    var sM = squeezer.get(mock, "id:4.arr.id:7.deep.id:8");
     expect(sM).to.be.an('object');
     expect(sM).to.have.property('msg', 'deepest object');
     done();
   });
   it("will throw an error if path is wrong", function(done){
-    expect(function(){squeezer(mock,"id:200")}).to.throw(/can't find property/);
+    expect(function(){squeezer.get(mock,"id:200")}).to.throw(/can't find property/);
     done();
   });
   it("will throw an error if node is not an object", function(done){
-    expect(function(){squeezer(mock,"id:4.arr.id.5")}).to.throw(/not an object/);
+    expect(function(){squeezer.get(mock,"id:4.arr.id.5")}).to.throw(/not an object/);
     done();
   });
+  it("will return true if property found", function(done){
+    var sM = squeezer.test(mock, "id:1");
+    expect(sM).to.be.ok;
+    done();
+  })
+  it("will return false if property not found", function(done){
+    var sM = squeezer.test(mock, "id:200");
+    expect(sM).not.to.be.ok;
+    done();
+  })
  /* it("will throw an error if node is not an array", function(done){
     expect(function(){squeezer(mock,"id:4.arr:id5")}).to.throw(/not an array/);
     done();
