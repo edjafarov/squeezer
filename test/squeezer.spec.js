@@ -33,44 +33,73 @@ describe("squeezer will allow you to",function(){
     expect(sM).to.be.ok;
 		expect(sM).to.be.an('object');
 		expect(sM).to.have.property('msg', 'id1');
-		done();
+    squeezer.get(mock, "id:1", function(err, res){
+      expect(res).to.be.ok;
+		  expect(res).to.be.an('object');
+		  expect(res).to.have.property('msg', 'id1');
+      done();
+    })
 	});
 
 	it("not even id", function(done){
 		var sM = squeezer.get(mock, "msg:id1");
 		expect(sM).to.be.an('object');
     expect(sM).to.have.property('id', 1);
-		done();
+		squeezer.get(mock, "msg:id1", function(err, res){
+  		expect(res).to.be.an('object');
+      expect(res).to.have.property('id', 1);
+      done();
+    })
 	});
   it("even deeply nested elements", function(done){
     var sM = squeezer.get(mock, "id:4.arr.id:6");
     expect(sM).to.be.an('object');
     expect(sM).to.have.property('msg', 'another nested');
-    done();
+ 		squeezer.get(mock, "id:4.arr.id:6", function(err, res){
+  		expect(res).to.be.an('object');
+      expect(res).to.have.property('msg', 'another nested');
+      done();
+    })
   });
   it("and even deeper nested elements", function(done){
     var sM = squeezer.get(mock, "id:4.arr.id:7.deep.id:8");
     expect(sM).to.be.an('object');
     expect(sM).to.have.property('msg', 'deepest object');
-    done();
+    squeezer.get(mock, "id:4.arr.id:7.deep.id:8", function(err, res){
+      expect(res).to.be.an('object');
+      expect(res).to.have.property('msg', 'deepest object');
+      done();
+    })
   });
   it("will throw an error if path is wrong", function(done){
     expect(function(){squeezer.get(mock,"id:200")}).to.throw(/can't find property/);
-    done();
+    squeezer.get(mock,"id:200", function(err){
+      expect(err.message).to.equal("can't find property");
+      done();
+    }) 
   });
   it("will throw an error if node is not an object", function(done){
     expect(function(){squeezer.get(mock,"id:4.arr.id.5")}).to.throw(/not an object/);
-    done();
+    squeezer.get(mock,"id:4.arr.id.5", function(err){
+      expect(err.message).to.equal("not an object");
+      done();
+    })
   });
   it("will return true if property found", function(done){
     var sM = squeezer.test(mock, "id:1");
     expect(sM).to.be.ok;
-    done();
+    squeezer.test(mock, "id:1", function(err, res){
+      expect(res).to.be.ok;
+      done();
+    })
   })
   it("will return false if property not found", function(done){
     var sM = squeezer.test(mock, "id:200");
     expect(sM).not.to.be.ok;
-    done();
+    squeezer.test(mock, "id:200", function(err, res){
+      expect(res).not.to.be.ok;
+      done();
+    })
   })
   it("will return array of elements If you will search with regexp", function(done){
     var sM = squeezer.get(mock, "msg:id\\d");
@@ -78,7 +107,13 @@ describe("squeezer will allow you to",function(){
     expect(sM).to.deep.equal( [ { id: 1, msg: 'id1' },
         { id: 2, msg: 'id2' },
           { id: 3, msg: 'id3' } ]);
-    done();
+    squeezer.get(mock, "msg:id\\d",function(err, res){
+      expect(res).to.be.an('array');
+      expect(res).to.deep.equal( [ { id: 1, msg: 'id1' },
+        { id: 2, msg: 'id2' },
+          { id: 3, msg: 'id3' } ]);
+      done();
+    })
   })
  
  /* it("will throw an error if node is not an array", function(done){
