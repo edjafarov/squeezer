@@ -74,14 +74,14 @@ describe("squeezer will allow you to",function(){
   it("will throw an error if path is wrong", function(done){
     expect(function(){squeezer.get(mock,"id:200")}).to.throw(/can't find property/);
     squeezer.get(mock,"id:200", function(err){
-      expect(err.message).to.equal("can't find property");
+      expect(err.message).to.contain("can't find property");
       done();
     }) 
   });
   it("will throw an error if node is not an object", function(done){
     expect(function(){squeezer.get(mock,"id:4.arr.id.5")}).to.throw(/not an object/);
     squeezer.get(mock,"id:4.arr.id.5", function(err){
-      expect(err.message).to.equal("not an object");
+      expect(err.message).to.contain("not an object");
       done();
     })
   });
