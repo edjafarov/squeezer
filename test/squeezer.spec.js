@@ -30,7 +30,7 @@ describe("squeezer will allow you to",function(){
 	];
 	it("refer nested object elements by value of their fields", function(done){
 		var sM = squeezer.get(mock, "id:1");
-		expect(sM).to.be.ok;
+    expect(sM).to.be.ok;
 		expect(sM).to.be.an('object');
 		expect(sM).to.have.property('msg', 'id1');
 		done();
@@ -72,6 +72,15 @@ describe("squeezer will allow you to",function(){
     expect(sM).not.to.be.ok;
     done();
   })
+  it("will return array of elements If you will search with regexp", function(done){
+    var sM = squeezer.get(mock, "msg:id\\d");
+    expect(sM).to.be.an('array');
+    expect(sM).to.deep.equal( [ { id: 1, msg: 'id1' },
+        { id: 2, msg: 'id2' },
+          { id: 3, msg: 'id3' } ]);
+    done();
+  })
+ 
  /* it("will throw an error if node is not an array", function(done){
     expect(function(){squeezer(mock,"id:4.arr:id5")}).to.throw(/not an array/);
     done();
