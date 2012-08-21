@@ -116,9 +116,10 @@ describe("squeezer will allow you to",function(){
     })
   })
  
- /* it("will throw an error if node is not an array", function(done){
-    expect(function(){squeezer(mock,"id:4.arr:id5")}).to.throw(/not an array/);
+  it("will squeeze arrays in complex objects into a hash objects", function(done){
+    var sM = squeezer.squeeze(mock, "id.arr.id.deep.id")
+    expect(sM[4].arr[7].deep[8].msg).to.equal("deepest object");
     done();
   
-  })*/
+  })
 })
