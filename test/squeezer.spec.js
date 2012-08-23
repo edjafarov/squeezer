@@ -1,6 +1,6 @@
 var squeezer = require("../lib/squeezer.js")();
 var expect = require("chai").expect;
-
+var _ = require("underscore");
 
 describe("squeezer will allow you to",function(){
 	var mock = [
@@ -28,7 +28,32 @@ describe("squeezer will allow you to",function(){
         }
       ]}
 	];
-	it("refer nested object elements by value of their fields", function(done){
+	var mock2 = [
+		{id:1, msg:"id1"},
+    {id:2, msg:"id2"},
+    {id:3, msg:"id3"},
+    {id:4, arr: [
+        {
+          id:5,
+          msg:"nested object"
+        },
+        {
+          id:6,
+          msg:"another nested"
+        },
+        {
+          id:7,
+          msg:"deeper nested",
+          deep: [
+            {
+              id:8,
+              msg:"deepest object"
+            }
+          ]
+        }
+      ]}
+	];
+it("refer nested object elements by value of their fields", function(done){
 		var sM = squeezer.get(mock, "id:1");
     expect(sM).to.be.ok;
 		expect(sM).to.be.an('object');
@@ -122,4 +147,11 @@ describe("squeezer will allow you to",function(){
     done();
   
   })
+ 
+  it("will squeeze arrays in complex objects into a hash objects dropping arrays", function(done){
+    var sM = squeezer.squeeze(mock2, "id.arr.id.deep.id", {zip:true})
+    expect(sM[4][7][8].msg).to.equal("deepest object");
+    done();
+  })
+
 })
