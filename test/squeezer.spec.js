@@ -53,7 +53,33 @@ describe("squeezer will allow you to",function(){
         }
       ]}
 	];
-it("refer nested object elements by value of their fields", function(done){
+	var mock3 = [
+		{id:1, msg:"id1"},
+    {id:2, msg:"id2"},
+    {id:3, msg:"id3"},
+    {id:4, arr: [
+        {
+          id:5,
+          msg:"nested object"
+        },
+        {
+          id:6,
+          msg:"another nested"
+        },
+        {
+          id:7,
+          msg:"deeper nested",
+          deep: [
+            {
+              id:8,
+              msg:"deepest object"
+            }
+          ]
+        }
+      ]}
+	];
+
+  it("refer nested object elements by value of their fields", function(done){
 		var sM = squeezer.get(mock, "id:1");
     expect(sM).to.be.ok;
 		expect(sM).to.be.an('object');
@@ -153,5 +179,11 @@ it("refer nested object elements by value of their fields", function(done){
     expect(sM[4][7][8].msg).to.equal("deepest object");
     done();
   })
+  it("will squeeze arrays in complex objects into a hash objects dropping arrays and props in zipProps array ", function(done){
+    var sM = squeezer.squeeze(mock3, "id.arr.id.deep.id.msg", {zip:true, zipProps:["msg"]})
+    expect(sM[4][7][8]).to.equal("deepest object");
+    done();
+  })
+
 
 })
